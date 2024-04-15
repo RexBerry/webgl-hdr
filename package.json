@@ -1,0 +1,19 @@
+{
+  "name": "webgl-hdr",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "fast-png": "^6.2.0",
+    "twgl.js": "^5.5.4"
+  }
+}
