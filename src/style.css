@@ -21,11 +21,13 @@ body {
 }
 
 #canvas-div {
-    position: absolute;
-    left: 15vw;
-    bottom: 5vh;
+    margin: 1rem auto;
     width: 70vw;
     height: calc(70vw * 9/16);
+
+    position: relative;
+    left: 0;
+    top: 0;
 }
 
 #canvas-div > video {
@@ -47,13 +49,6 @@ body {
     mix-blend-mode: multiply;
 }
 
-#color-canvas {
-    -moz-transform: scale(1, -1);
-    -o-transform: scale(1, -1);
-    -webkit-transform: scale(1, -1);
-    transform: scale(1, -1);
-}
-
 #canvas-outline {
     position: absolute;
     left: 0;
@@ -63,6 +58,13 @@ body {
     outline: 2px solid white;
     outline-offset: -1px;
     z-index: 1000000;
+}
+
+#color-canvas {
+    -moz-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    transform: scale(1, -1);
 }
 
 #hdr-warning {
