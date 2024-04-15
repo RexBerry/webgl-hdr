@@ -2,7 +2,7 @@
 
 precision highp float;
 
-uniform highp usampler2D u_texture;
+uniform sampler2D u_texture;
 
 in vec2 v_texcoord;
 
@@ -58,9 +58,7 @@ float linear_to_srgb(float x)
 
 void main()
 {
-    vec4 color = linear_to_srgb(
-        vec4(texture(u_texture, v_texcoord)) * (1.0 / 65535.0)
-    );
+    vec4 color = linear_to_srgb(texture(u_texture, v_texcoord));
     color = clamp(color, vec4(0.0), vec4(1.0));
 
     vec3 srgb = ceil(255.0 * color.rgb);

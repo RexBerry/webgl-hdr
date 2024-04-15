@@ -2,13 +2,13 @@
 
 precision highp float;
 
-uniform float u_max_brightness_squared;
 uniform float u_brightness_mult;
-uniform highp usampler2D u_texture;
+uniform float u_reciprocal_white_point_squared;
+uniform sampler2D u_texture;
 
 in vec2 v_texcoord;
 
-out highp uvec4 out_color;
+out vec4 out_color;
 
 float calc_luminance(vec3 x)
 {
@@ -23,13 +23,14 @@ void main()
 {
     // Extended Reinhard tone mapping using luminance
     // https://64.github.io/tonemapping/
-    vec4 color = u_brightness_mult * vec4(texture(u_texture, v_texcoord));
+    vec4 color = u_brightness_mult * texture(u_texture, v_texcoord);
     float luminance = calc_luminance(color.rgb);
     float ratio
-        = (1.0 + luminance / u_max_brightness_squared) / (1.0 + luminance);
+        = (1.0 + u_reciprocal_white_point_squared * luminance)
+        / (1.0 + luminance);
     vec4 tonemapped = vec4(
         color.rgb * ratio, color.a
     );
     tonemapped = clamp(tonemapped, vec4(0.0), vec4(1.0));
-    out_color = uvec4(65535.0 * tonemapped);
+    out_color = tonemapped;
 }

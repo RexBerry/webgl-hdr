@@ -6,16 +6,15 @@ import * as shaders from "./shaders.ts"
 
 type RenderSettings = {
     isHdrEnabled: boolean
-    outputDynamicRange: number
-    maxBrightness: number
+    dynamicRange: number
+    whitePoint: number
+    isAntialiasingEnabled: boolean
 }
 
 type FramebufferInfoRef = { value: twgl.FramebufferInfo }
 type PixelDataArrayRef = { value: Uint8ClampedArray }
 
 function main(): void {
-    twgl.setUniformsAndBindTextures
-
     const superwhiteElem: HTMLElement =
         document.querySelector("#superwhite") ??
         (() => {
@@ -45,7 +44,7 @@ function main(): void {
         depth: false,
         stencil: false,
         desynchronized: false,
-        antialias: true,
+        antialias: false,
         failIfMajorPerformanceCaveat: true,
         powerPreference: "default",
         preserveDrawingBuffer: false,
@@ -62,16 +61,21 @@ function main(): void {
             throw new Error("cannot get WebGL2RenderingContext")
         })()
 
-    gl.enable(gl.DEPTH_TEST)
-    gl.enable(gl.CULL_FACE)
+    if (!gl.getExtension("EXT_color_buffer_float")) {
+        throw new Error("could not get EXT_color_buffer_float")
+    }
 
     const programInfo = twgl.createProgramInfo(gl, [
         shaders.colorVs,
         shaders.colorFs,
     ])
-    const postProcessProgramInfo = twgl.createProgramInfo(gl, [
+    const tonemapProgramInfo = twgl.createProgramInfo(gl, [
         shaders.textureVs,
         shaders.tonemapFs,
+    ])
+    const antialiasProgramInfo = twgl.createProgramInfo(gl, [
+        shaders.textureVs,
+        shaders.fxaaFs,
     ])
     const colorCanvasProgramInfo = twgl.createProgramInfo(gl, [
         shaders.textureVs,
@@ -89,14 +93,11 @@ function main(): void {
     const arrays = {
         a_position: {
             numComponents: 4,
-            data: [
-                -0.5, -0.5, 0, 1, 0.5, -0.5, 0, 1, 0.5, 0.5, 0, 1, -0.5, 0.5,
-                0, 1,
-            ],
+            data: [-1, -1, -5, 1, 1, -1, -5, 1, 1, 1, -6, 1, -1, 1, -6, 1],
         },
         a_color: {
             numComponents: 4,
-            data: [0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1],
+            data: [0, 0, 0, 1, 0, 0, 4, 1, 0, 4, 0, 1, 4, 0, 0, 1],
         },
         indices: {
             data: [0, 1, 3, 2, 3, 1],
@@ -135,8 +136,9 @@ function main(): void {
 
     const renderSettings: RenderSettings = {
         isHdrEnabled: true,
-        outputDynamicRange: 5.0,
-        maxBrightness: 10.0,
+        dynamicRange: 5.0,
+        whitePoint: 20.0,
+        isAntialiasingEnabled: false,
     }
 
     setInterval(
@@ -149,7 +151,8 @@ function main(): void {
         framebufferInfoRef1,
         framebufferInfoRef2,
         programInfo,
-        postProcessProgramInfo,
+        tonemapProgramInfo,
+        antialiasProgramInfo,
         colorCanvasProgramInfo,
         brightnessCanvasProgramInfo,
         sdrCanvasProgramInfo,
@@ -167,7 +170,8 @@ function render(
     framebufferInfoRef1: FramebufferInfoRef,
     framebufferInfoRef2: FramebufferInfoRef,
     programInfo: twgl.ProgramInfo,
-    postProcessProgramInfo: twgl.ProgramInfo,
+    tonemapProgramInfo: twgl.ProgramInfo,
+    antialiasProgramInfo: twgl.ProgramInfo,
     colorCanvasProgramInfo: twgl.ProgramInfo,
     brightnessCanvasProgramInfo: twgl.ProgramInfo,
     sdrCanvasProgramInfo: twgl.ProgramInfo,
@@ -175,27 +179,12 @@ function render(
     fillScreenBufferInfo: twgl.BufferInfo,
     pixelDataArrayRef: PixelDataArrayRef,
 ): void {
-    renderSettings.isHdrEnabled = (<HTMLInputElement>(document.querySelector(
-        "#enable-hdr",
-    ) ??
-        (() => {
-            throw new Error("could not get #enable-hdr")
-        })())).checked
-
-    const hdrWarning = (
-        document.querySelector("#hdr-warning") ??
-        (() => {
-            throw new Error("could not get #hdr-warning")
-        })()
+    updateSettings(
+        renderSettings,
+        superwhiteElem,
+        ctx.canvas,
+        <HTMLCanvasElement>gl.canvas,
     )
-    if (window.matchMedia("(dynamic-range: high)").matches) {
-        hdrWarning.textContent = ""
-    } else {
-        hdrWarning.textContent = "Your device or browser does not support HDR."
-        renderSettings.isHdrEnabled = false
-    }
-
-    renderSettings.outputDynamicRange = renderSettings.isHdrEnabled ? 5.0 : 1.0
 
     if (resizeCanvas(ctx.canvas)) {
         gl.canvas.width = ctx.canvas.width
@@ -212,13 +201,6 @@ function render(
         )
     }
 
-    configureHdr(
-        renderSettings.isHdrEnabled,
-        superwhiteElem,
-        ctx.canvas,
-        <HTMLCanvasElement>gl.canvas,
-    )
-
     let toFramebufferInfo: twgl.FramebufferInfo
     let fromFramebufferInfo: twgl.FramebufferInfo
     ;[toFramebufferInfo, fromFramebufferInfo] = renderIntoFramebuffer(
@@ -234,7 +216,8 @@ function render(
         gl,
         toFramebufferInfo,
         fromFramebufferInfo,
-        postProcessProgramInfo,
+        tonemapProgramInfo,
+        antialiasProgramInfo,
         fillScreenBufferInfo,
     )
 
@@ -269,8 +252,7 @@ function renderIntoFramebuffer(
     bufferInfo: twgl.BufferInfo,
 ): [twgl.FramebufferInfo, twgl.FramebufferInfo] {
     twgl.bindFramebufferInfo(gl, framebufferInfo1)
-    gl.clearBufferuiv(gl.COLOR, 0, [0, 0, 0, 0])
-    gl.clear(gl.DEPTH_BUFFER_BIT)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.enable(gl.DEPTH_TEST)
     gl.enable(gl.CULL_FACE)
@@ -278,6 +260,13 @@ function renderIntoFramebuffer(
     gl.useProgram(programInfo.program)
 
     twgl.setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo)
+    twgl.setUniforms(programInfo.uniformSetters, {
+        u_transform: twgl.m4.multiply(
+            perspectiveMatrix(gl, 70),
+            viewMatrix([1, -1, 0], [0, 0, -10]),
+        ),
+    })
+
     gl.drawElements(
         gl.TRIANGLES,
         bufferInfo.numElements,
@@ -296,34 +285,54 @@ function postProcess(
     gl: WebGL2RenderingContext,
     framebufferInfo1: twgl.FramebufferInfo,
     framebufferInfo2: twgl.FramebufferInfo,
-    postProcessProgramInfo: twgl.ProgramInfo,
+    tonemapProgramInfo: twgl.ProgramInfo,
+    antialiasProgramInfo: twgl.ProgramInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
 ): [twgl.FramebufferInfo, twgl.FramebufferInfo] {
-    const brightnessRatio =
-        renderSettings.maxBrightness / renderSettings.outputDynamicRange
-    const brightnessMult = brightnessRatio / 65535
-
     twgl.bindFramebufferInfo(gl, framebufferInfo1)
-    gl.clearBufferuiv(gl.COLOR, 0, [0, 0, 0, 0])
-    gl.clear(gl.DEPTH_BUFFER_BIT)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(postProcessProgramInfo.program)
+    gl.useProgram(tonemapProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,
-        postProcessProgramInfo.attribSetters,
+        tonemapProgramInfo.attribSetters,
         fillScreenBufferInfo,
     )
-    twgl.setUniformsAndBindTextures(postProcessProgramInfo.uniformSetters, {
-        u_max_brightness_squared: brightnessRatio ** 2,
-        u_brightness_mult: brightnessMult,
+    twgl.setUniformsAndBindTextures(tonemapProgramInfo.uniformSetters, {
+        u_transform: twgl.m4.identity(),
+        u_brightness_mult: 1 / renderSettings.dynamicRange,
+        u_reciprocal_white_point_squared: 1 / renderSettings.whitePoint ** 2,
         u_texture: framebufferInfo2.attachments[0],
     })
     gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
 
-    return [framebufferInfo2, framebufferInfo1]
+    if (!renderSettings.isAntialiasingEnabled) {
+        return [framebufferInfo2, framebufferInfo1]
+    }
+
+    twgl.bindFramebufferInfo(gl, framebufferInfo2)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    gl.disable(gl.DITHER)
+    gl.disable(gl.DEPTH_TEST)
+    gl.disable(gl.CULL_FACE)
+    gl.useProgram(antialiasProgramInfo.program)
+
+    twgl.setBuffersAndAttributes(
+        gl,
+        antialiasProgramInfo.attribSetters,
+        fillScreenBufferInfo,
+    )
+    twgl.setUniformsAndBindTextures(antialiasProgramInfo.uniformSetters, {
+        u_transform: twgl.m4.identity(),
+        u_reciprocal_resolution: [1 / gl.canvas.width, 1 / gl.canvas.height],
+        u_texture: framebufferInfo1.attachments[0],
+    })
+    gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
+
+    return [framebufferInfo1, framebufferInfo2]
 }
 
 function drawToCanvasHdr(
@@ -356,6 +365,7 @@ function drawToCanvasHdr(
         fillScreenBufferInfo,
     )
     twgl.setUniformsAndBindTextures(colorCanvasProgramInfo.uniformSetters, {
+        u_transform: twgl.m4.identity(),
         u_texture: framebufferInfo.attachments[0],
     })
     gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
@@ -398,6 +408,7 @@ function drawToCanvasHdr(
     twgl.setUniformsAndBindTextures(
         brightnessCanvasProgramInfo.uniformSetters,
         {
+            u_transform: twgl.m4.identity(),
             u_texture: framebufferInfo.attachments[0],
         },
     )
@@ -424,6 +435,7 @@ function drawToCanvasSdr(
         fillScreenBufferInfo,
     )
     twgl.setUniformsAndBindTextures(sdrCanvasProgramInfo.uniformSetters, {
+        u_transform: twgl.m4.identity(),
         u_texture: framebufferInfo.attachments[0],
     })
     gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
@@ -455,9 +467,9 @@ function createFramebufferInfo(
         gl,
         [
             {
-                internalFormat: gl.RGBA16UI,
-                format: gl.RGBA_INTEGER,
-                type: gl.UNSIGNED_SHORT,
+                internalFormat: gl.RGBA16F,
+                format: gl.RGBA,
+                type: gl.HALF_FLOAT,
                 min: gl.NEAREST,
                 mag: gl.NEAREST,
             },
@@ -471,13 +483,55 @@ function createFramebufferInfo(
     )
 }
 
-function configureHdr(
-    enableHdr: boolean,
+function viewMatrix(camera: twgl.v3.Vec3, target: twgl.v3.Vec3): twgl.m4.Mat4 {
+    return twgl.m4.inverse(twgl.m4.lookAt(camera, target, [0, 1, 0]))
+}
+
+function perspectiveMatrix(
+    gl: WebGL2RenderingContext,
+    verticalFovDeg: number,
+): twgl.m4.Mat4 {
+    return twgl.m4.perspective(
+        verticalFovDeg * (Math.PI / 180),
+        gl.canvas.width / gl.canvas.height,
+        1,
+        100,
+    )
+}
+
+function updateSettings(
+    renderSettings: RenderSettings,
     superwhiteElem: HTMLElement,
     colorCanvas: HTMLCanvasElement,
     brightnessCanvas: HTMLCanvasElement,
-): boolean {
-    if (enableHdr) {
+): void {
+    renderSettings.isHdrEnabled = (<HTMLInputElement>(document.querySelector(
+        "#enable-hdr",
+    ) ??
+        (() => {
+            throw new Error("could not get #enable-hdr")
+        })())).checked
+
+    renderSettings.isAntialiasingEnabled = (<HTMLInputElement>(
+        (document.querySelector("#enable-antialias") ??
+            (() => {
+                throw new Error("could not get #enable-antialias")
+            })())
+    )).checked
+
+    const hdrWarning =
+        document.querySelector("#hdr-warning") ??
+        (() => {
+            throw new Error("could not get #hdr-warning")
+        })()
+    if (window.matchMedia("(dynamic-range: high)").matches) {
+        hdrWarning.textContent = ""
+    } else {
+        hdrWarning.textContent = "Your device or browser does not support HDR."
+        renderSettings.isHdrEnabled = false
+    }
+
+    if (renderSettings.isHdrEnabled) {
         if (
             superwhiteElem.style.visibility !== "visible" ||
             colorCanvas.style.visibility !== "visible" ||
@@ -486,8 +540,6 @@ function configureHdr(
             superwhiteElem.style.visibility = "visible"
             colorCanvas.style.visibility = "visible"
             brightnessCanvas.style["mix-blend-mode"] = "multiply"
-
-            return true
         }
     } else {
         if (
@@ -498,12 +550,10 @@ function configureHdr(
             superwhiteElem.style.visibility = "hidden"
             colorCanvas.style.visibility = "hidden"
             brightnessCanvas.style["mix-blend-mode"] = "normal"
-
-            return true
         }
     }
 
-    return false
+    renderSettings.dynamicRange = renderSettings.isHdrEnabled ? 5.0 : 1.0
 }
 
 window.onload = main
