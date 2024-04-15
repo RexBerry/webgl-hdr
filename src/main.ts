@@ -535,20 +535,24 @@ function updateSettings(
         if (
             superwhiteElem.style.visibility !== "visible" ||
             colorCanvas.style.visibility !== "visible" ||
+            // @ts-ignore
             brightnessCanvas.style["mix-blend-mode"] !== "multiply"
         ) {
             superwhiteElem.style.visibility = "visible"
             colorCanvas.style.visibility = "visible"
+            // @ts-ignore
             brightnessCanvas.style["mix-blend-mode"] = "multiply"
         }
     } else {
         if (
             superwhiteElem.style.visibility !== "hidden" ||
             colorCanvas.style.visibility !== "hidden" ||
+            // @ts-ignore
             brightnessCanvas.style["mix-blend-mode"] !== "normal"
         ) {
             superwhiteElem.style.visibility = "hidden"
             colorCanvas.style.visibility = "hidden"
+            // @ts-ignore
             brightnessCanvas.style["mix-blend-mode"] = "normal"
         }
     }
