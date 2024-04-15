@@ -93,11 +93,11 @@ function main(): void {
     const arrays = {
         a_position: {
             numComponents: 4,
-            data: [-1, -1, -5, 1, 1, -1, -5, 1, 1, 1, -6, 1, -1, 1, -6, 1],
+            data: [-1, -1, -3, 1, 1, -1, -3, 1, 1, 1, -4, 1, -1, 1, -4, 1],
         },
         a_color: {
             numComponents: 4,
-            data: [0, 0, 0, 1, 0, 0, 4, 1, 0, 4, 0, 1, 4, 0, 0, 1],
+            data: [0, 0, 0, 1, 0, 0, 20, 1, 0, 20, 0, 1, 20, 0, 0, 1],
         },
         indices: {
             data: [0, 1, 3, 2, 3, 1],
@@ -262,8 +262,8 @@ function renderIntoFramebuffer(
     twgl.setBuffersAndAttributes(gl, programInfo.attribSetters, bufferInfo)
     twgl.setUniforms(programInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
-            perspectiveMatrix(gl, 70),
-            viewMatrix([1, -1, 0], [0, 0, -10]),
+            perspectiveMatrix(gl, 80),
+            viewMatrix([1, 0, -1], [0, 0, -4]),
         ),
     })
 
