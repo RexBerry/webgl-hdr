@@ -25,10 +25,15 @@ export function renderScene(
         sceneProgramInfo.attribSetters,
         bufferInfo,
     )
+
+    const t = performance.now() / 1000
+    const x = 3.5 * Math.sin(t)
+    const z = -3.5 + 3.5 * Math.cos(t)
+
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
             camera.perspectiveMatrix(gl, 80),
-            camera.viewMatrix([1, 0, -1], [0, 0, -4]),
+            camera.viewMatrix([x, 0, z], [0, 0, -3.5]),
         ),
     })
 

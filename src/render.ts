@@ -9,6 +9,46 @@ import { postProcess } from "./post-process"
 import { renderScene } from "./render-scene"
 import * as util from "./util"
 
+export function renderAnimation(
+    renderSettings: RenderSettings,
+    superwhiteElem: HTMLElement,
+    ctx: CanvasRenderingContext2D,
+    gl: WebGL2RenderingContext,
+    framebuffers: Framebuffers,
+    programs: GLPrograms,
+    bufferInfo: twgl.BufferInfo,
+    fillScreenBufferInfo: twgl.BufferInfo,
+    pixelDataArrayRef: PixelDataArrayRef,
+): void {
+    render(
+        renderSettings,
+        superwhiteElem,
+        ctx,
+        gl,
+        framebuffers,
+        programs,
+        bufferInfo,
+        fillScreenBufferInfo,
+        pixelDataArrayRef,
+    )
+
+    window.requestAnimationFrame(
+        () => {
+            renderAnimation(
+                renderSettings,
+                superwhiteElem,
+                ctx,
+                gl,
+                framebuffers,
+                programs,
+                bufferInfo,
+                fillScreenBufferInfo,
+                pixelDataArrayRef,
+            )
+        }
+    )
+}
+
 export function render(
     renderSettings: RenderSettings,
     superwhiteElem: HTMLElement,

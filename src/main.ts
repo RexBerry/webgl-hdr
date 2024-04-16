@@ -6,7 +6,7 @@ import { ELEMENT_IDS, PixelDataArrayRef, RenderSettings } from "./common"
 
 import { initFramebuffers } from "./framebuffers"
 import { initGlPrograms } from "./gl-programs"
-import { render } from "./render"
+import { renderAnimation } from "./render"
 import * as util from "./util"
 
 function main(): void {
@@ -64,7 +64,7 @@ function main(): void {
             data: [0, 0, 0, 1, 0, 0, 20, 1, 0, 20, 0, 1, 20, 0, 0, 1],
         },
         indices: {
-            data: [0, 1, 3, 2, 3, 1],
+            data: [0, 1, 3, 2, 3, 1, 0, 3, 1, 2, 1, 3],
             type: gl.UNSIGNED_SHORT,
         },
     }
@@ -100,18 +100,20 @@ function main(): void {
         isAntialiasingEnabled: false,
     }
 
-    setInterval(
-        render,
-        100,
-        renderSettings,
-        superwhiteElem,
-        ctx,
-        gl,
-        framebuffers,
-        programs,
-        bufferInfo,
-        fillScreenBufferInfo,
-        pixelDataArrayRef,
+    window.requestAnimationFrame(
+        () => {
+            renderAnimation(
+                renderSettings,
+                superwhiteElem,
+                ctx,
+                gl,
+                framebuffers,
+                programs,
+                bufferInfo,
+                fillScreenBufferInfo,
+                pixelDataArrayRef,
+            )
+        }
     )
 }
 
