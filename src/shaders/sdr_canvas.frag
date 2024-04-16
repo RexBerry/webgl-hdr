@@ -22,15 +22,12 @@ const mat3 xyz_to_srgb = inverse(mat3(
 
 const mat3 display_p3_to_srgb = xyz_to_srgb * display_p3_to_xyz;
 
-vec4 srgb_to_linear(vec4 x)
+vec3 srgb_to_linear(vec3 x)
 {
-    return vec4(
-        mix(
-            x.rgb / 12.92,
-            pow((x.rgb + 0.055) / 1.055, vec3(2.4)),
-            greaterThan(x.rgb, vec3(0.04045))
-        ),
-        x.a
+    return mix(
+        x / 12.92,
+        pow((x + 0.055) / 1.055, vec3(2.4)),
+        greaterThan(x, vec3(0.04045))
     );
 }
 
@@ -46,15 +43,12 @@ float srgb_to_linear(float x)
     }
 }
 
-vec4 linear_to_srgb(vec4 x)
+vec3 linear_to_srgb(vec3 x)
 {
-    return vec4(
-        mix(
-            12.92 * x.rgb,
-            1.055 * pow(x.rgb, vec3(1.0 / 2.4)) - 0.055,
-            greaterThan(x.rgb, vec3(0.0031308))
-        ),
-        x.a
+    return mix(
+        12.92 * x,
+        1.055 * pow(x, vec3(1.0 / 2.4)) - 0.055,
+        greaterThan(x, vec3(0.0031308))
     );
 }
 
@@ -72,9 +66,9 @@ float linear_to_srgb(float x)
 
 void main()
 {
-    vec4 color = texture(u_texture, v_texcoord);
-    color = linear_to_srgb(vec4(display_p3_to_srgb * color.rgb, color.a));
-    color = clamp(color, vec4(0.0), vec4(1.0));
+    vec3 color = texture(u_texture, v_texcoord).rgb;
+    color = linear_to_srgb(display_p3_to_srgb * color);
+    color = clamp(color, vec3(0.0), vec3(1.0));
 
-    out_color = color;
+    out_color = vec4(color, 1.0);
 }

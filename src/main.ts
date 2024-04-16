@@ -470,8 +470,6 @@ function createFramebufferInfo(
                 internalFormat: gl.RGBA16F,
                 format: gl.RGBA,
                 type: gl.HALF_FLOAT,
-                min: gl.NEAREST,
-                mag: gl.NEAREST,
             },
             {
                 format: gl.DEPTH_STENCIL,
