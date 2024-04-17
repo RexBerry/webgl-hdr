@@ -54,20 +54,23 @@ export function updateSettings(
         if (browserName === "safari") {
             // Safari doesn't support CanvasRenderingContext2D.filter
             hdrWarningText =
-                "HDR is supported, but colors might not appear correctly"
-                + " on Safari."
+                "HDR is supported, but colors might not appear correctly" +
+                " on Safari."
         } else if (browserName === "edge-chromium") {
             // Edge doesn't display the superwhite video correctly
             hdrWarningText =
-                "HDR is supported, but might not be displayed at full"
-                + " brightness on Edge."
+                "HDR is supported, but might not be displayed at full" +
+                " brightness on Edge."
         } else {
             hdrWarningText = ""
         }
     } else {
-        hdrWarningText =
-            "HDR is not supported." +
-            " If your device supports HDR, try using Chrome."
+        hdrWarningText = "HDR is not supported."
+
+        if (browserName !== "chrome") {
+            hdrWarningText += " If your device supports HDR, try using Chrome."
+        }
+
         renderSettings.isHdrEnabled = false
     }
 
