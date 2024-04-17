@@ -2,6 +2,7 @@ import * as twgl from "twgl.js"
 
 import { RenderSettings } from "./common"
 
+import { updateBloomBlurPrograms } from "./blur-programs"
 import { drawToCanvasHdr, drawToCanvasSdr } from "./draw-to-canvas"
 import { Framebuffers, resizeFramebuffers } from "./framebuffers"
 import { GLPrograms } from "./gl-programs"
@@ -32,20 +33,18 @@ export function renderAnimation(
         fillScreenBufferInfo,
     )
 
-    window.requestAnimationFrame(
-        () => {
-            renderAnimation(
-                renderSettings,
-                superwhiteElem,
-                ctx,
-                gl,
-                framebuffers,
-                programs,
-                bufferInfo,
-                fillScreenBufferInfo,
-            )
-        }
-    )
+    window.requestAnimationFrame(() => {
+        renderAnimation(
+            renderSettings,
+            superwhiteElem,
+            ctx,
+            gl,
+            framebuffers,
+            programs,
+            bufferInfo,
+            fillScreenBufferInfo,
+        )
+    })
 }
 
 export function render(
@@ -75,6 +74,8 @@ export function render(
         resizeFramebuffers(gl, framebuffers)
     }
 
+    updateBloomBlurPrograms(programs.bloomBlurPrograms, renderSettings, gl)
+
     renderScene(
         renderSettings,
         gl,
@@ -87,6 +88,7 @@ export function render(
         renderSettings,
         gl,
         framebuffers,
+        programs.bloomBlurPrograms,
         programs.tonemapProgramInfo,
         programs.antialiasProgramInfo,
         fillScreenBufferInfo,

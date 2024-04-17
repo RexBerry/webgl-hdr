@@ -10,6 +10,14 @@ import { renderAnimation } from "./render"
 import * as util from "./util"
 
 function main(): void {
+    const renderSettings: RenderSettings = {
+        isHdrEnabled: true,
+        dynamicRange: 5.0,
+        isAntialiasingEnabled: false,
+        verticalFov: 80.0,
+        bloomRadius: 5.0,
+    }
+
     const superwhiteElem: HTMLElement = util.getElement(ELEMENT_IDS.superwhite)
 
     const ctxOptions = {
@@ -54,7 +62,7 @@ function main(): void {
         throw new Error("could not get EXT_color_buffer_float")
     }
 
-    const programs = initGlPrograms(gl)
+    const programs = initGlPrograms(renderSettings, gl)
 
     const arrays = {
         a_position: {
@@ -90,13 +98,6 @@ function main(): void {
     )
 
     const framebuffers = initFramebuffers(gl)
-
-    const renderSettings: RenderSettings = {
-        isHdrEnabled: true,
-        dynamicRange: 5.0,
-        isAntialiasingEnabled: false,
-        verticalFov: 80.0,
-    }
 
     window.requestAnimationFrame(
         () => {

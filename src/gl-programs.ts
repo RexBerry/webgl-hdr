@@ -1,21 +1,29 @@
 import * as twgl from "twgl.js"
 
+import { RenderSettings } from "./common"
+
+import { BlurPrograms, createBloomBlurPrograms } from "./blur-programs"
 import * as shaders from "./shaders"
 
 export type GLPrograms = {
-    sceneProgramInfo: twgl.ProgramInfo,
-    tonemapProgramInfo: twgl.ProgramInfo,
-    antialiasProgramInfo: twgl.ProgramInfo,
-    colorCanvasProgramInfo: twgl.ProgramInfo,
-    brightnessCanvasProgramInfo: twgl.ProgramInfo,
-    sdrCanvasProgramInfo: twgl.ProgramInfo,
+    sceneProgramInfo: twgl.ProgramInfo
+    bloomBlurPrograms: BlurPrograms
+    tonemapProgramInfo: twgl.ProgramInfo
+    antialiasProgramInfo: twgl.ProgramInfo
+    colorCanvasProgramInfo: twgl.ProgramInfo
+    brightnessCanvasProgramInfo: twgl.ProgramInfo
+    sdrCanvasProgramInfo: twgl.ProgramInfo
 }
 
-export function initGlPrograms(gl: WebGL2RenderingContext): GLPrograms {
+export function initGlPrograms(
+    renderSettings: RenderSettings,
+    gl: WebGL2RenderingContext,
+): GLPrograms {
     const sceneProgramInfo = twgl.createProgramInfo(gl, [
         shaders.colorVs,
         shaders.colorFs,
     ])
+    const bloomBlurPrograms = createBloomBlurPrograms(renderSettings, gl)
     const tonemapProgramInfo = twgl.createProgramInfo(gl, [
         shaders.textureVs,
         shaders.tonemapFs,
@@ -39,6 +47,7 @@ export function initGlPrograms(gl: WebGL2RenderingContext): GLPrograms {
 
     return {
         sceneProgramInfo,
+        bloomBlurPrograms,
         tonemapProgramInfo,
         antialiasProgramInfo,
         colorCanvasProgramInfo,

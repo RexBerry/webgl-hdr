@@ -3,6 +3,7 @@ export type RenderSettings = {
     dynamicRange: number
     isAntialiasingEnabled: boolean
     verticalFov: number
+    bloomRadius: number
 }
 
 export const ELEMENT_IDS = Object.freeze({
