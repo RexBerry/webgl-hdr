@@ -48,7 +48,6 @@ export function updateSettings(
 
     const supportsHdr = window.matchMedia("(dynamic-range: high)").matches
     const browserName = detectBrowser()?.name ?? "unknown"
-    console.log(browserName)
 
     if (supportsHdr) {
         if (browserName === "safari") {
