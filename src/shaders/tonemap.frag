@@ -54,9 +54,9 @@ float linear_to_srgb(float x)
 
 float calc_luminance(vec3 x)
 {
-    // Y component of Display P3 to CIEXYZ
+    // Y components (CIE XYZ) of Display P3 primaries
     return dot(
-        vec3(0.22897, 0.69174, 0.07929),
+        vec3(0.228983, 0.691749, 0.079268),
         x
     );
 }

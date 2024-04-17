@@ -8,19 +8,11 @@ in vec2 v_texcoord;
 
 out vec4 out_color;
 
-const mat3 display_p3_to_xyz = mat3(
-    vec3(0.48657, 0.22897, 0.0),
-    vec3(0.26567, 0.69174, 0.04511),
-    vec3(0.19822, 0.07929, 1.04394)
+const mat3 display_p3_to_srgb = mat3(
+    vec3(1.22494, -0.0420584, -0.019644),
+    vec3(-0.224935, 1.04206, -0.0786588),
+    vec3(-3.26731e-6, 1.35536e-6, 1.0983)
 );
-
-const mat3 xyz_to_srgb = inverse(mat3(
-    vec3(0.41239, 0.21264, 0.01933),
-    vec3(0.35758, 0.71517, 0.11919),
-    vec3(0.18048, 0.07219, 0.95053)
-));
-
-const mat3 display_p3_to_srgb = xyz_to_srgb * display_p3_to_xyz;
 
 vec3 srgb_to_linear(vec3 x)
 {
