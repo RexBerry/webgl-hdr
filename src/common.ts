@@ -3,6 +3,7 @@ export type RenderSettings = {
     dynamicRange: number
     isAntialiasingEnabled: boolean
     verticalFov: number
+    bloomThresholdRatio: number
     bloomRadius: number
 }
 

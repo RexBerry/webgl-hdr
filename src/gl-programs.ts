@@ -7,7 +7,9 @@ import * as shaders from "./shaders"
 
 export type GLPrograms = {
     sceneProgramInfo: twgl.ProgramInfo
+    bloomExtractBrightProgramInfo: twgl.ProgramInfo
     bloomBlurPrograms: BlurPrograms
+    bloomCompositeProgramInfo: twgl.ProgramInfo
     tonemapProgramInfo: twgl.ProgramInfo
     antialiasProgramInfo: twgl.ProgramInfo
     colorCanvasProgramInfo: twgl.ProgramInfo
@@ -23,7 +25,15 @@ export function initGlPrograms(
         shaders.colorVs,
         shaders.colorFs,
     ])
+    const bloomExtractBrightProgramInfo = twgl.createProgramInfo(gl, [
+        shaders.textureVs,
+        shaders.bloomExtractBrightFs,
+    ])
     const bloomBlurPrograms = createBloomBlurPrograms(renderSettings, gl)
+    const bloomCompositeProgramInfo = twgl.createProgramInfo(gl, [
+        shaders.textureVs,
+        shaders.bloomCompositeFs,
+    ])
     const tonemapProgramInfo = twgl.createProgramInfo(gl, [
         shaders.textureVs,
         shaders.tonemapFs,
@@ -47,7 +57,9 @@ export function initGlPrograms(
 
     return {
         sceneProgramInfo,
+        bloomExtractBrightProgramInfo,
         bloomBlurPrograms,
+        bloomCompositeProgramInfo,
         tonemapProgramInfo,
         antialiasProgramInfo,
         colorCanvasProgramInfo,

@@ -15,7 +15,8 @@ function main(): void {
         dynamicRange: 5.0,
         isAntialiasingEnabled: false,
         verticalFov: 80.0,
-        bloomRadius: 5.0,
+        bloomThresholdRatio: 1.0,
+        bloomRadius: 6.0,
     }
 
     const superwhiteElem: HTMLElement = util.getElement(ELEMENT_IDS.superwhite)
@@ -67,14 +68,30 @@ function main(): void {
     const arrays = {
         a_position: {
             numComponents: 4,
-            data: [-1, -1, -3, 1, 1, -1, -3, 1, 1, 1, -4, 1, -1, 1, -4, 1],
+            data: [
+                0, 0, -4, 1,
+                2, 0, -4, 1,
+                1, 1.73, -5, 1,
+                -1, 1.73, -5, 1,
+                -2, 0, -4, 1,
+                -1, -1.73, -3, 1,
+                1, -1.73, -3, 1,
+            ],
         },
         a_color: {
             numComponents: 4,
-            data: [0, 0, 0, 1, 0, 0, 20, 1, 0, 20, 0, 1, 20, 0, 0, 1],
+            data: [
+                3, 3, 3, 1,
+                10, 0, 0, 1,
+                10, 10, 0, 1,
+                0, 10, 0, 1,
+                0, 10, 10, 1,
+                0, 0, 10, 1,
+                10, 0, 10, 1,
+            ],
         },
         indices: {
-            data: [0, 1, 3, 2, 3, 1, 0, 3, 1, 2, 1, 3],
+            data: [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 1],
             type: gl.UNSIGNED_SHORT,
         },
     }

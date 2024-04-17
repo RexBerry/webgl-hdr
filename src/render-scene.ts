@@ -17,7 +17,8 @@ export function renderScene(
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.enable(gl.DEPTH_TEST)
-    gl.enable(gl.CULL_FACE)
+    // gl.enable(gl.CULL_FACE)
+    gl.disable(gl.CULL_FACE)
     gl.cullFace(gl.BACK)
 
     twgl.setBuffersAndAttributes(
@@ -27,13 +28,13 @@ export function renderScene(
     )
 
     const t = performance.now() / 1000
-    const x = 3.5 * Math.sin(t)
-    const z = -3.5 + 3.5 * Math.cos(t)
+    const x = 4 * Math.sin(t)
+    const z = -4 + 4 * Math.cos(t)
 
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
             camera.perspectiveMatrix(gl, renderSettings.verticalFov),
-            camera.viewMatrix([x, 0, z], [0, 0, -3.5]),
+            camera.viewMatrix([x, 0, z], [0, 0, -4]),
         ),
     })
 
