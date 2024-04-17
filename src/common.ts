@@ -1,7 +1,6 @@
 export type RenderSettings = {
     isHdrEnabled: boolean
     dynamicRange: number
-    whitePoint: number
     isAntialiasingEnabled: boolean
 }
 

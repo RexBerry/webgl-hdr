@@ -94,7 +94,6 @@ function main(): void {
     const renderSettings: RenderSettings = {
         isHdrEnabled: true,
         dynamicRange: 5.0,
-        whitePoint: 20.0,
         isAntialiasingEnabled: false,
     }
 
