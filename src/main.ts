@@ -95,6 +95,7 @@ function main(): void {
         isHdrEnabled: true,
         dynamicRange: 5.0,
         isAntialiasingEnabled: false,
+        verticalFov: 80.0,
     }
 
     window.requestAnimationFrame(

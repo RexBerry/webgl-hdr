@@ -2,6 +2,7 @@ export type RenderSettings = {
     isHdrEnabled: boolean
     dynamicRange: number
     isAntialiasingEnabled: boolean
+    verticalFov: number
 }
 
 export const ELEMENT_IDS = Object.freeze({

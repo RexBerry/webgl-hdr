@@ -32,7 +32,7 @@ export function renderScene(
 
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
-            camera.perspectiveMatrix(gl, 80),
+            camera.perspectiveMatrix(gl, renderSettings.verticalFov),
             camera.viewMatrix([x, 0, z], [0, 0, -3.5]),
         ),
     })
