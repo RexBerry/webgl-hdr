@@ -19,6 +19,8 @@ export function renderAnimation(
     bufferInfo: twgl.BufferInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
 ): void {
+    util.updateFpsCounter()
+
     render(
         renderSettings,
         superwhiteElem,

@@ -13,4 +13,5 @@ export const ELEMENT_IDS = Object.freeze({
     antialiasToggle: "enable-antialias",
     hdrWarning: "hdr-warning",
     displayP3ToSrgbFilter: "display-p3-to-srgb",
+    fpsCounter: "fps-counter",
 })
