@@ -39,6 +39,32 @@
             <div id="canvas-outline"></div>
         </div>
 
+        <div id="svg-div">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                <defs>
+                    <filter id="display-p3-to-srgb">
+                        <!--
+                        The WebGL canvas is in sRGB (WebGL doesn't support
+                        Display P3) and the Canvas 2D canvas is in Display P3.
+                        When drawing the WebGL canvas onto the Canvas 2D
+                        canvas, the colors will be interpreted as sRGB, so this
+                        filter is necessary to get the Display P3 colors we
+                        want.
+
+                        SVG/Canvas filters run in a linear color space, so all
+                        we need is this matrix.
+                        -->
+                        <feColorMatrix in="SourceGraphic" type="matrix" values="
+                            1.22494     -0.224935   -3.26731e-6     0   0
+                            -0.0420584  1.04206     1.35536e-6      0   0
+                            -0.019644   -0.0786588  1.0983          0   0
+                            0           0           0               1   0
+                        " />
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

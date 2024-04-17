@@ -2,7 +2,7 @@ import "./style.css"
 
 import * as twgl from "twgl.js"
 
-import { ELEMENT_IDS, PixelDataArrayRef, RenderSettings } from "./common"
+import { ELEMENT_IDS, RenderSettings } from "./common"
 
 import { initFramebuffers } from "./framebuffers"
 import { initGlPrograms } from "./gl-programs"
@@ -27,6 +27,8 @@ function main(): void {
         (() => {
             throw new Error("could not get CanvasRenderingContext2D")
         })()
+
+    ctx.filter = `url(#${ELEMENT_IDS.displayP3ToSrgbFilter})`
 
     const glOptions = {
         alpha: false,
@@ -89,10 +91,6 @@ function main(): void {
 
     const framebuffers = initFramebuffers(gl)
 
-    const pixelDataArrayRef: PixelDataArrayRef = {
-        value: new Uint8ClampedArray(4 * gl.canvas.width * gl.canvas.height),
-    }
-
     const renderSettings: RenderSettings = {
         isHdrEnabled: true,
         dynamicRange: 5.0,
@@ -111,7 +109,6 @@ function main(): void {
                 programs,
                 bufferInfo,
                 fillScreenBufferInfo,
-                pixelDataArrayRef,
             )
         }
     )

@@ -5,8 +5,6 @@ export type RenderSettings = {
     isAntialiasingEnabled: boolean
 }
 
-export type PixelDataArrayRef = { value: Uint8ClampedArray }
-
 export const ELEMENT_IDS = Object.freeze({
     superwhite: "superwhite",
     colorCanvas: "color-canvas",
@@ -14,4 +12,5 @@ export const ELEMENT_IDS = Object.freeze({
     hdrToggle: "enable-hdr",
     antialiasToggle: "enable-antialias",
     hdrWarning: "hdr-warning",
+    displayP3ToSrgbFilter: "display-p3-to-srgb",
 })

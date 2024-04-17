@@ -10,7 +10,6 @@ export function drawToCanvasHdr(
     colorCanvasProgramInfo: twgl.ProgramInfo,
     brightnessCanvasProgramInfo: twgl.ProgramInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
-    pixelDataArray: Uint8ClampedArray,
 ): void {
     // Our framebuffer uses 16 bits per component, but the canvas element uses
     // only 8.
@@ -38,25 +37,13 @@ export function drawToCanvasHdr(
     gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
 
     // Render color to color canvas
-    // WebGL contexts don't support Display P3, so we must do this instead
+    // WebGL contexts don't support Display P3,
+    // so we must use a Canvas 2D context.
+    // The filter assigned to ctx ensures that the color is rendered
+    // correctly (it might be slightly off due to slight differences in
+    // the browser's color conversion math).
 
-    gl.readPixels(
-        0,
-        0,
-        gl.canvas.width,
-        gl.canvas.height,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        pixelDataArray,
-    )
-
-    const displayP3ImageData = new ImageData(
-        pixelDataArray,
-        gl.canvas.width,
-        gl.canvas.height,
-        { colorSpace: "display-p3" },
-    )
-    ctx.putImageData(displayP3ImageData, 0, 0)
+    ctx.drawImage(gl.canvas, 0, 0)
 
     // Extract brightness from framebuffer and render to brightness canvas
 

@@ -1,6 +1,6 @@
 import * as twgl from "twgl.js"
 
-import { PixelDataArrayRef, RenderSettings } from "./common"
+import { RenderSettings } from "./common"
 
 import { drawToCanvasHdr, drawToCanvasSdr } from "./draw-to-canvas"
 import { Framebuffers, resizeFramebuffers } from "./framebuffers"
@@ -18,7 +18,6 @@ export function renderAnimation(
     programs: GLPrograms,
     bufferInfo: twgl.BufferInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
-    pixelDataArrayRef: PixelDataArrayRef,
 ): void {
     render(
         renderSettings,
@@ -29,7 +28,6 @@ export function renderAnimation(
         programs,
         bufferInfo,
         fillScreenBufferInfo,
-        pixelDataArrayRef,
     )
 
     window.requestAnimationFrame(
@@ -43,7 +41,6 @@ export function renderAnimation(
                 programs,
                 bufferInfo,
                 fillScreenBufferInfo,
-                pixelDataArrayRef,
             )
         }
     )
@@ -58,7 +55,6 @@ export function render(
     programs: GLPrograms,
     bufferInfo: twgl.BufferInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
-    pixelDataArrayRef: PixelDataArrayRef,
 ): void {
     util.updateSettings(
         renderSettings,
@@ -67,15 +63,14 @@ export function render(
         <HTMLCanvasElement>gl.canvas,
     )
 
+    const filter = ctx.filter
     if (util.resizeCanvas(ctx.canvas)) {
+        ctx.filter = filter
+
         gl.canvas.width = ctx.canvas.width
         gl.canvas.height = ctx.canvas.height
 
         resizeFramebuffers(gl, framebuffers)
-
-        pixelDataArrayRef.value = new Uint8ClampedArray(
-            4 * gl.canvas.width * gl.canvas.height,
-        )
     }
 
     renderScene(
@@ -104,7 +99,6 @@ export function render(
             programs.colorCanvasProgramInfo,
             programs.brightnessCanvasProgramInfo,
             fillScreenBufferInfo,
-            pixelDataArrayRef.value,
         )
     } else {
         drawToCanvasSdr(
