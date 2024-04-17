@@ -10,7 +10,7 @@ export type BlurPrograms = {
     programs: twgl.ProgramInfo[]
 }
 
-const INITIAL_PASSES = 2
+const INITIAL_PASSES = 3
 
 export function createBlurPrograms(
     gl: WebGL2RenderingContext,
