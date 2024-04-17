@@ -6,8 +6,8 @@ export function createApproxBlurShaders(
     let resolution = 1
 
     for (let i = 0; i < initialPasses; ++i) {
-        shaders.push(createBlurShader(2 * resolution, resolution))
-        resolution *= 2
+        shaders.push(createBlurShader(3 * resolution, resolution))
+        resolution *= 3
     }
 
     shaders.push(createBlurShader(blurRadius, resolution))
