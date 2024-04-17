@@ -15,7 +15,7 @@ function main(): void {
         dynamicRange: 5.0,
         isAntialiasingEnabled: false,
         verticalFov: 80.0,
-        bloomThresholdRatio: 1.0,
+        bloomThresholdRatio: 1.5,
         bloomRadius: 6.0,
     }
 
