@@ -12,13 +12,13 @@ export function renderScene(
     sceneProgramInfo: twgl.ProgramInfo,
     bufferInfo: twgl.BufferInfo,
 ): void {
+    gl.useProgram(sceneProgramInfo.program)
     twgl.bindFramebufferInfo(gl, framebuffers[0])
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.enable(gl.DEPTH_TEST)
     gl.enable(gl.CULL_FACE)
     gl.cullFace(gl.BACK)
-    gl.useProgram(sceneProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,

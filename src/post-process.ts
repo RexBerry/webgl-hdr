@@ -54,12 +54,12 @@ export function postProcess(
         gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
     }
 
+    gl.useProgram(tonemapProgramInfo.program)
     twgl.bindFramebufferInfo(gl, framebuffers[1])
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(tonemapProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,
@@ -81,12 +81,12 @@ export function postProcess(
         return
     }
 
+    gl.useProgram(antialiasProgramInfo.program)
     twgl.bindFramebufferInfo(gl, framebuffers[0])
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(antialiasProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,

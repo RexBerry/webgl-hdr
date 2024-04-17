@@ -18,12 +18,12 @@ export function drawToCanvasHdr(
 
     // Extract color from framebuffer
 
+    gl.useProgram(colorCanvasProgramInfo.program)
     twgl.bindFramebufferInfo(gl, null)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.enable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(colorCanvasProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,
@@ -47,12 +47,11 @@ export function drawToCanvasHdr(
 
     // Extract brightness from framebuffer and render to brightness canvas
 
-    twgl.bindFramebufferInfo(gl, null)
+    gl.useProgram(brightnessCanvasProgramInfo.program)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.disable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(brightnessCanvasProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,
@@ -76,12 +75,12 @@ export function drawToCanvasSdr(
     sdrCanvasProgramInfo: twgl.ProgramInfo,
     fillScreenBufferInfo: twgl.BufferInfo,
 ): void {
+    gl.useProgram(sdrCanvasProgramInfo.program)
     twgl.bindFramebufferInfo(gl, null)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.enable(gl.DITHER)
     gl.disable(gl.DEPTH_TEST)
     gl.disable(gl.CULL_FACE)
-    gl.useProgram(sdrCanvasProgramInfo.program)
 
     twgl.setBuffersAndAttributes(
         gl,
