@@ -1,4 +1,5 @@
 import { ELEMENT_IDS, RenderSettings } from "./common"
+import { detect as detectBrowser } from "detect-browser"
 
 export function getElement(id: string): HTMLElement {
     return (
@@ -45,10 +46,28 @@ export function updateSettings(
     const hdrWarning = getElement(ELEMENT_IDS.hdrWarning)
     let hdrWarningText: string
 
-    if (window.matchMedia("(dynamic-range: high)").matches) {
-        hdrWarningText = ""
+    const supportsHdr = window.matchMedia("(dynamic-range: high)").matches
+    const browserName = detectBrowser()?.name ?? "unknown"
+    console.log(browserName)
+
+    if (supportsHdr) {
+        if (browserName === "safari") {
+            // Safari doesn't support CanvasRenderingContext2D.filter
+            hdrWarningText =
+                "HDR is supported, but colors might not appear correctly"
+                + " on Safari."
+        } else if (browserName === "edge-chromium") {
+            // Edge doesn't display the superwhite video correctly
+            hdrWarningText =
+                "HDR is supported, but might not be displayed at full"
+                + " brightness on Edge."
+        } else {
+            hdrWarningText = ""
+        }
     } else {
-        hdrWarningText = "Your device or browser does not support HDR."
+        hdrWarningText =
+            "HDR is not supported." +
+            " If your device supports HDR, try using Chrome."
         renderSettings.isHdrEnabled = false
     }
 
@@ -104,9 +123,8 @@ class Queue<T> {
 
     // queue must not be empty
     back(): T {
-        const idx = this._backIdx === 0
-            ? this._data.length - 1
-            : this._backIdx - 1
+        const idx =
+            this._backIdx === 0 ? this._data.length - 1 : this._backIdx - 1
 
         return <T>this._data[idx]
     }

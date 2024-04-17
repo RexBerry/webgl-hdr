@@ -13,6 +13,7 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "detect-browser": "^5.3.0",
     "fast-png": "^6.2.0",
     "twgl.js": "^5.5.4"
   }
