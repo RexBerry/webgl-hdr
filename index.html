@@ -13,13 +13,18 @@
             <h1>WebGL HDR</h1>
 
             <label for="enable-hdr">Enable HDR</label>
-            <input type="checkbox" id="enable-hdr" name="enable-hdr" checked>
+            <input type="checkbox" id="enable-hdr" name="enable-hdr" checked />
             <span id="hdr-warning"></span>
 
-            <br>
+            <br />
 
             <label for="enable-antialias">Enable Antialiasing</label>
-            <input type="checkbox" id="enable-antialias" name="enable-antialias">
+            <input
+                type="checkbox"
+                id="enable-antialias"
+                name="enable-antialias"
+                checked
+            />
         </div>
 
         <div id="canvas-div">
@@ -54,12 +59,16 @@
                         SVG/Canvas filters run in a linear color space, so all
                         we need is this matrix.
                         -->
-                        <feColorMatrix in="SourceGraphic" type="matrix" values="
-                            1.22494     -0.224935   -3.26731e-6     0   0
-                            -0.0420584  1.04206     1.35536e-6      0   0
-                            -0.019644   -0.0786588  1.0983          0   0
-                            0           0           0               1   0
-                        " />
+                        <feColorMatrix
+                            in="SourceGraphic"
+                            type="matrix"
+                            values="
+                                1.22494     -0.224935   -3.26731e-6     0   0
+                                -0.0420584  1.04206     1.35536e-6      0   0
+                                -0.019644   -0.0786588  1.0983          0   0
+                                0           0           0               1   0
+                            "
+                        />
                     </filter>
                 </defs>
             </svg>
