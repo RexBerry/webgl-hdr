@@ -5,12 +5,22 @@ precision highp float;
 uniform mat4 u_transform;
 
 in vec4 a_position;
+in vec3 a_normal;
 in vec4 a_color;
 
+out vec3 v_position;
+out vec3 v_normal;
 out vec4 v_color;
+
+// Phong reflection model
+// https://en.wikipedia.org/wiki/Phong_reflection_model
 
 void main()
 {
-    gl_Position = u_transform * a_position;
+    vec4 position = u_transform * a_position;
+    gl_Position = position;
+
+    v_position = a_position.xyz;
+    v_normal = a_normal;
     v_color = a_color;
 }
