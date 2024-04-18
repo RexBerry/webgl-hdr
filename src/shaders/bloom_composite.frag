@@ -2,6 +2,7 @@
 
 precision highp float;
 
+uniform float u_bloom_threshold;
 uniform sampler2D u_scene_texture;
 uniform sampler2D u_bloom_texture;
 
@@ -12,7 +13,7 @@ out vec4 out_color;
 void main()
 {
     out_color = vec4(
-        texture(u_scene_texture, v_texcoord).rgb
+        min(texture(u_scene_texture, v_texcoord).rgb, vec3(u_bloom_threshold))
         + pow(texture(u_bloom_texture, v_texcoord).rgb, vec3(2.0)),
         1.0
     );

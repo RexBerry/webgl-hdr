@@ -99,6 +99,7 @@ export function postProcess(
         bloomCompositeProgramInfo.uniformSetters,
         {
             u_transform: twgl.m4.identity(),
+            u_bloom_threshold: bloomThreshold,
             u_scene_texture: framebuffers[3].attachments[0],
             u_bloom_texture: framebuffers[1].attachments[0],
         },
