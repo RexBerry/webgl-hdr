@@ -70,6 +70,8 @@ export function renderScene(
     const y = 0.5
     const z = -5 + currRadius * Math.cos(currAngle)
 
+    const blueLight = (2 + Math.sin(performance.now() / 1000)) / 3
+
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
             camera.perspectiveMatrix(gl, renderSettings.verticalFov),
@@ -77,18 +79,17 @@ export function renderScene(
         ),
         u_camera_position: [x, y, z],
         u_light_positions: [
-            3, -2, 0,
-            -4, -2, -10,
+            -4, -2, -9,
             4, 0, -8,
         ],
         u_light_colors: [
-            1250, 0, 0,
-            0, 0, 15,
-            0, 250, 0,
+            75, 75, 75 * blueLight,
+            75, 75, 75 * blueLight,
+            150, 150, 150 * blueLight,
         ],
-        u_ambient_light: [0.25, 0.25, 0.25],
-        u_specular_reflection: 5.0,
-        u_diffuse_reflection: 0.5,
+        u_ambient_light: [0.05, 0.05, 0.05],
+        u_specular_reflection: 10.0,
+        u_diffuse_reflection: 0.75,
         u_shininess: 50.0,
     })
 
