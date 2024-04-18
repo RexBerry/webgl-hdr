@@ -16,7 +16,7 @@ function main(): void {
         isAntialiasingEnabled: false,
         verticalFov: 80.0,
         bloomThresholdRatio: 4.0,
-        bloomRadius: 6.0,
+        bloomRadius: 4.0,
     }
 
     const superwhiteElem: HTMLElement = util.getElement(ELEMENT_IDS.superwhite)
