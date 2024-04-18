@@ -14,7 +14,7 @@ export function perspectiveMatrix(
     return twgl.m4.perspective(
         verticalFovDeg * (Math.PI / 180),
         gl.canvas.width / gl.canvas.height,
-        1,
+        0.1,
         100,
     )
 }

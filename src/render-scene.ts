@@ -5,6 +5,15 @@ import { RenderSettings } from "./common"
 import * as camera from "./camera"
 import { Framebuffers } from "./framebuffers"
 
+let mouseX: number = 0
+let mouseY: number = 0
+
+window.addEventListener("mousemove", (e) => {
+    mouseX = e.screenX / window.screen.width
+    mouseY = e.screenY / window.screen.height
+    console.log(mouseX, mouseY)
+})
+
 export function renderScene(
     renderSettings: RenderSettings,
     gl: WebGL2RenderingContext,
@@ -26,16 +35,18 @@ export function renderScene(
         bufferInfo,
     )
 
-    const t = performance.now() / 1000
-    const x = 5 * Math.sin(t)
-    const z = -5 + 5 * Math.cos(t)
+    const radius = 10 * (1 - mouseY)
+    const angle = 2 * Math.PI * (mouseX - 0.5)
+    const x = radius * Math.sin(angle)
+    const y = 0.5
+    const z = -5 + radius * Math.cos(angle)
 
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(
             camera.perspectiveMatrix(gl, renderSettings.verticalFov),
-            camera.viewMatrix([x, 0, z], [0, -2, -5]),
+            camera.viewMatrix([x, y, z], [0, -2, -5]),
         ),
-        u_camera_position: [x, 0, z],
+        u_camera_position: [x, z, z],
         u_light_positions: [
             2, -0.5, 2,
             -6, -2, -7,
