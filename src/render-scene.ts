@@ -5,12 +5,44 @@ import { RenderSettings } from "./common"
 import * as camera from "./camera"
 import { Framebuffers } from "./framebuffers"
 
-let mouseX: number = 0
-let mouseY: number = 0
+let currRadius: number = 5
+let currAngle: number = 0
 
-window.addEventListener("mousemove", (e) => {
-    mouseX = e.screenX / window.screen.width
-    mouseY = e.screenY / window.screen.height
+let beginRadius: number = 0
+let beginAngle: number = 0
+
+let beginPointerX: number = 0
+let beginPointerY: number = 0
+
+let pointerDown: boolean = false
+
+window.addEventListener("pointerdown", (e) => {
+    beginPointerX = e.screenX
+    beginPointerY = e.screenY
+    beginRadius = currRadius
+    beginAngle = currAngle
+    pointerDown = true
+})
+
+window.addEventListener("pointerup", (e) => {
+    pointerDown = false
+})
+
+window.addEventListener("pointermove", (e) => {
+    if (!pointerDown) {
+        return
+    }
+
+    currRadius = Math.max(
+        0,
+        Math.min(
+            10,
+            beginRadius + 10 * -(e.screenY - beginPointerY) / screen.height
+        )
+    )
+    currAngle = (
+        beginAngle - 2 * Math.PI * (e.screenX - beginPointerX) / screen.width
+    ) % (2 * Math.PI)
 })
 
 export function renderScene(
@@ -34,11 +66,9 @@ export function renderScene(
         bufferInfo,
     )
 
-    const radius = 10 * (1 - mouseY)
-    const angle = 2 * Math.PI * (mouseX - 0.5)
-    const x = radius * Math.sin(angle)
+    const x = currRadius * Math.sin(currAngle)
     const y = 0.5
-    const z = -5 + radius * Math.cos(angle)
+    const z = -5 + currRadius * Math.cos(currAngle)
 
     twgl.setUniforms(sceneProgramInfo.uniformSetters, {
         u_transform: twgl.m4.multiply(

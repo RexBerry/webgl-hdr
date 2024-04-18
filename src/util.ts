@@ -192,7 +192,7 @@ export function updateFpsCounter() {
         (frameTimes.length - 1) /
         ((frameTimes.back() - frameTimes.front()) / 1000)
 
-    const fpsCounterText = `Frames per second: ${Math.round(fps)}`
+    const fpsCounterText = `FPS: ${Math.round(fps)}`
 
     if (fpsCounter.textContent !== fpsCounterText) {
         fpsCounter.textContent = fpsCounterText
