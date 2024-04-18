@@ -79,6 +79,7 @@ export function renderScene(
         ),
         u_camera_position: [x, y, z],
         u_light_positions: [
+            4, -2, 5,
             -4, -2, -9,
             4, 0, -8,
         ],
