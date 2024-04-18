@@ -34,7 +34,7 @@ window.addEventListener("pointermove", (e) => {
     }
 
     currRadius = Math.max(
-        0,
+        1,
         Math.min(
             10,
             beginRadius + 10 * -(e.screenY - beginPointerY) / screen.height
@@ -82,12 +82,12 @@ export function renderScene(
             4, 0, -8,
         ],
         u_light_colors: [
-            2500, 0, 0,
-            0, 0, 30,
-            0, 500, 0,
+            1250, 0, 0,
+            0, 0, 15,
+            0, 250, 0,
         ],
         u_ambient_light: [0.25, 0.25, 0.25],
-        u_specular_reflection: 2.5,
+        u_specular_reflection: 5.0,
         u_diffuse_reflection: 0.5,
         u_shininess: 50.0,
     })
