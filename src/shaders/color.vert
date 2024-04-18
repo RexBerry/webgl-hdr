@@ -12,8 +12,7 @@ out vec3 v_position;
 out vec3 v_normal;
 out vec4 v_color;
 
-// Phong reflection model
-// https://en.wikipedia.org/wiki/Phong_reflection_model
+// Blinn-Phong reflection model
 
 void main()
 {

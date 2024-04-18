@@ -45,27 +45,21 @@ export function renderScene(
             camera.perspectiveMatrix(gl, renderSettings.verticalFov),
             camera.viewMatrix([x, y, z], [0, -2, -5]),
         ),
-        u_camera_position: [x, z, z],
+        u_camera_position: [x, y, z],
         u_light_positions: [
-            3, -2, 3,
-            -6, -2, -8,
+            3, -2, 0,
+            -4, -2, -10,
             4, 0, -8,
         ],
-        u_specular_lights: [
-            30, 10, 0,
-            0, 0, 100,
-            0, 200, 0,
-        ],
-        u_diffuse_lights: [
-            6.0, 2.0, 0,
-            0, 0, 7.0,
-            0, 3.0, 0,
+        u_light_colors: [
+            2500, 0, 0,
+            0, 0, 30,
+            0, 500, 0,
         ],
         u_ambient_light: [0.25, 0.25, 0.25],
-        u_specular_reflection: 0.95,
-        u_diffuse_reflection: 0.75,
-        u_ambient_reflection: 0.75,
-        u_shininess: 20.0,
+        u_specular_reflection: 2.5,
+        u_diffuse_reflection: 0.5,
+        u_shininess: 50.0,
     })
 
     gl.drawArrays(
