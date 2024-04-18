@@ -11,7 +11,6 @@ let mouseY: number = 0
 window.addEventListener("mousemove", (e) => {
     mouseX = e.screenX / window.screen.width
     mouseY = e.screenY / window.screen.height
-    console.log(mouseX, mouseY)
 })
 
 export function renderScene(
@@ -48,19 +47,19 @@ export function renderScene(
         ),
         u_camera_position: [x, z, z],
         u_light_positions: [
-            2, -0.5, 2,
-            -6, -2, -7,
+            3, -2, 3,
+            -6, -2, -8,
             4, 0, -8,
         ],
         u_specular_lights: [
-            20, 0, 0,
-            0, 0, 30,
-            0, 10, 0,
+            30, 10, 0,
+            0, 0, 100,
+            0, 200, 0,
         ],
         u_diffuse_lights: [
-            1.0, 0, 0,
-            0, 0, 1.5,
-            0, 0.5, 0,
+            6.0, 2.0, 0,
+            0, 0, 7.0,
+            0, 3.0, 0,
         ],
         u_ambient_light: [0.25, 0.25, 0.25],
         u_specular_reflection: 0.95,
