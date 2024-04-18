@@ -65,6 +65,11 @@ function main(): void {
 
     const programs = initGlPrograms(renderSettings, gl)
 
+    const diffuseReflection = 0.5
+    const specularReflection = 5.0
+    const cubeShininess = 50.0
+    const floorShininess = 500.0
+
     const arrays = {
         a_position: {
             numComponents: 4,
@@ -148,7 +153,48 @@ function main(): void {
                 0, 1, 0,
             ]
         },
-        a_color: {
+        a_diffuse_color: {
+            numComponents: 4,
+            data: [
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.5, 0.5, 1.0, 1,
+                0.15, 0.15, 0.1, 1,
+                0.15, 0.15, 0.1, 1,
+                0.15, 0.15, 0.1, 1,
+                0.15, 0.15, 0.1, 1,
+                0.15, 0.15, 0.1, 1,
+                0.15, 0.15, 0.1, 1,
+            ],
+        },
+        a_specular_color: {
             numComponents: 4,
             data: [
                 0.5, 0.5, 1.0, 1,
@@ -187,6 +233,47 @@ function main(): void {
                 0.15, 0.15, 0.15, 1,
                 0.15, 0.15, 0.15, 1,
                 0.15, 0.15, 0.15, 1,
+            ],
+        },
+        a_reflection_info: {
+            numComponents: 3,
+            data: [
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, cubeShininess,
+                diffuseReflection, specularReflection, floorShininess,
+                diffuseReflection, specularReflection, floorShininess,
+                diffuseReflection, specularReflection, floorShininess,
+                diffuseReflection, specularReflection, floorShininess,
+                diffuseReflection, specularReflection, floorShininess,
+                diffuseReflection, specularReflection, floorShininess,
             ],
         },
     }

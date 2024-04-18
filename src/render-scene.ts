@@ -78,20 +78,22 @@ export function renderScene(
             camera.viewMatrix([x, y, z], [0, -2, -5]),
         ),
         u_camera_position: [x, y, z],
-        u_light_positions: [
-            4, -2, 5,
-            -4, -2, -9,
-            4, 0, -8,
-        ],
-        u_light_colors: [
-            75, 75, 75 * blueLight,
-            75, 75, 75 * blueLight,
-            150, 150, 150 * blueLight,
+        u_light_count: 3,
+        u_lights: [
+            {
+                position: [4, -2, 5],
+                color: [75, 75, 75 * blueLight],
+            },
+            {
+                position: [-4, -2, -9],
+                color: [75, 75, 75 * blueLight],
+            },
+            {
+                position: [4, 0, -8],
+                color: [150, 150, 150 * blueLight],
+            },
         ],
         u_ambient_light: [0.05, 0.05, 0.05],
-        u_specular_reflection: 10.0,
-        u_diffuse_reflection: 0.75,
-        u_shininess: 50.0,
     })
 
     gl.drawArrays(
