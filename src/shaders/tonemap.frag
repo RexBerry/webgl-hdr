@@ -70,6 +70,13 @@ void main()
     vec3 color = texture(u_texture, v_texcoord).rgb;
 
     float input_luminance = calc_luminance(color);
+
+    if (input_luminance == 0.0)
+    {
+        out_color = vec4(0.0);
+        return;
+    }
+
     float input_luminance_squared = input_luminance * input_luminance;
 
     float output_luminance = 0.9 * (
@@ -82,7 +89,7 @@ void main()
 
     float ratio = output_luminance / input_luminance;
 
-    vec3 tonemapped = ratio * color;
+    vec3 tonemapped = min(ratio * color, 1.0);
 
     // FXAA shader requires luma in alpha channel
     float luma = calc_luma(tonemapped);
