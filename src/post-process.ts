@@ -120,7 +120,7 @@ export function postProcess(
     )
     twgl.setUniformsAndBindTextures(tonemapProgramInfo.uniformSetters, {
         u_transform: twgl.m4.identity(),
-        u_brightness_mult: 1 / renderSettings.dynamicRange,
+        u_brightness_mult: 1.5 / renderSettings.dynamicRange,
         u_texture: framebuffers[0].attachments[0],
     })
     gl.drawArrays(gl.TRIANGLES, 0, fillScreenBufferInfo.numElements)
