@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "5.6.2",
+    "vite": "5.4.8"
   },
   "dependencies": {
-    "detect-browser": "^5.3.0",
-    "fast-png": "^6.2.0",
-    "twgl.js": "^5.5.4"
+    "detect-browser": "5.3.0",
+    "fast-png": "6.2.0",
+    "twgl.js": "5.5.4"
   }
 }
